@@ -11,11 +11,6 @@ public class AuthController {
     public String loginPage() {
         return "login";
     }
-
-    @PostMapping("/logout")
-    public String logout() {
-        System.out.println("hello");
-        return "signup";
-    }
+    
 
 }

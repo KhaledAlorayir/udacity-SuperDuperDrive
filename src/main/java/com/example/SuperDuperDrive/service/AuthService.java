@@ -22,12 +22,11 @@ public class AuthService implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        User user = userMapper.findByUsername(authentication.getName().toUpperCase()).orElseThrow();
-
-        if (!hashService.comparePassword(user, authentication.getCredentials().toString())) {
+        Optional<User> user = userMapper.findByUsername(authentication.getName().toUpperCase());
+        if (user.isEmpty() || !hashService.comparePassword(user.get(), authentication.getCredentials().toString())) {
             return null;
         }
-        return new UsernamePasswordAuthenticationToken(user,authentication.getCredentials(),null);
+        return new UsernamePasswordAuthenticationToken(user.get(),authentication.getCredentials(),null);
     }
 
     @Override
