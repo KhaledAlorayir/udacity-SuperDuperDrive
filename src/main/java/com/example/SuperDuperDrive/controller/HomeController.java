@@ -28,6 +28,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String homePage(CreateNoteRequest createNoteRequest) {
+        System.out.println(noteService.getNotes());
         return "home";
     }
 

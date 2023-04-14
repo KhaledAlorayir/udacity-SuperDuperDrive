@@ -1,12 +1,14 @@
 package com.example.SuperDuperDrive.service;
 
 import com.example.SuperDuperDrive.dto.CreateNoteRequest;
+import com.example.SuperDuperDrive.dto.GetNoteResponse;
 import com.example.SuperDuperDrive.entity.Note;
 import com.example.SuperDuperDrive.mapper.NoteMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +21,7 @@ public class NoteService {
         noteMapper.create(new Note(createNoteRequest.getTitle(),createNoteRequest.getDescription(),authService.getAuthentication().getId()));
     }
 
-    //GET LIST WITH DTO
+    public List<GetNoteResponse> getNotes() {
+        return noteMapper.findAllByUserId(authService.getAuthentication().getId()).stream().map(note -> new GetNoteResponse(note)).collect(Collectors.toList());
+    }
 }
