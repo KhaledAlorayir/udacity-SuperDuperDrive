@@ -16,30 +16,34 @@
 
             <h1 class="display-5">Sign Up</h1>
             <form action="#" method="POST" th:object="${createUserRequest}" th:action="@{/signup}">
-                <div id="success-msg" class="alert alert-dark" th:if="${success}">
-                    You successfully signed up! Please continue to the <a>login</a> page.
+                <div id="success-msg" class="alert alert-dark" th:if="${response?.data}">
+                    You successfully signed up! Please continue to the <a href="login.html">login</a> page.
                 </div>
-                <div class="alert alert-danger" th:if="${error}">
-                    <span>Example Signup Error Message</span>
+                <div class="alert alert-danger" th:if="${response?.error}">
+                    <span th:text="${response.error}"></span>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputFirstName">First Name</label>
                         <input th:field="*{firstname}" name="firstname" type="text" class="form-control" id="inputFirstName" placeholder="Enter First Name" maxlength="20" required>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputLastName">Last Name</label>
                         <input th:field="*{lastname}" name="lastname" type="text" class="form-control" id="inputLastName" placeholder="Enter Last Name" maxlength="20" required>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputUsername">Username</label>
                         <input th:field="*{username}" name="username" type="text" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Password</label>
                         <input th:field="*{password}" name="password" type="password" class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required >
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{username}"></div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" id="buttonSignUp">Sign Up</button>

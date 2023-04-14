@@ -1,5 +1,6 @@
 package com.example.SuperDuperDrive.service;
 
+import com.example.SuperDuperDrive.dto.GenerateHashPassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.Random;
 
 @Service
 public class HashService {
@@ -31,6 +33,15 @@ public class HashService {
         }
 
         return Base64.getEncoder().encodeToString(hashedValue);
+    }
+
+    public GenerateHashPassword generateHashPassword(String password) {
+        Random random = new Random();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        String encodedSalt = Base64.getEncoder().encodeToString(salt);
+        String hashed = getHashedValue(password,encodedSalt);
+        return new GenerateHashPassword(hashed,encodedSalt);
     }
 
 }
