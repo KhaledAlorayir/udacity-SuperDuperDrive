@@ -1,6 +1,7 @@
 package com.example.SuperDuperDrive.service;
 
 import com.example.SuperDuperDrive.dto.GenerateHashPassword;
+import com.example.SuperDuperDrive.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class HashService {
 
     public final Logger logger = LoggerFactory.getLogger(HashService.class);
 
-    public String getHashedValue(String data, String salt) {
+    private String getHashedValue(String data, String salt) {
         byte[] hashedValue = null;
 
         int iterCount = 12288;
@@ -42,6 +43,10 @@ public class HashService {
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
         String hashed = getHashedValue(password,encodedSalt);
         return new GenerateHashPassword(hashed,encodedSalt);
+    }
+
+    public boolean comparePassword(User user, String attemptPassword) {
+        return user.getPassword().equals(getHashedValue(attemptPassword,user.getSalt()));
     }
 
 }

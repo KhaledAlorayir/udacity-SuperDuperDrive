@@ -24,13 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signupAction(@Valid CreateUserRequest createUserRequest,BindingResult result, Model model) {
-        if(result.hasErrors()){
+    public String createUser(@Valid CreateUserRequest createUserRequest, BindingResult result, Model model) {
+        if (result.hasErrors()) {
             return "signup";
         }
 
         Response response = userService.createUser(createUserRequest);
-        model.addAttribute("response",response);
+        model.addAttribute("response", response);
         createUserRequest.clear();
         return "signup";
     }
