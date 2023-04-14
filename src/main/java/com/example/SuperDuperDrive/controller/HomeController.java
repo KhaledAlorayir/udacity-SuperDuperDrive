@@ -3,6 +3,7 @@ package com.example.SuperDuperDrive.controller;
 import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.dto.FormValidationError;
 import com.example.SuperDuperDrive.service.AuthService;
+import com.example.SuperDuperDrive.service.NoteService;
 import com.example.SuperDuperDrive.util.Helpers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,25 +24,26 @@ import java.util.List;
 public class HomeController {
 
     private final Helpers helpers;
+    private final NoteService noteService;
 
     @GetMapping("/home")
-    public String homePage(CreateNoteRequest createNoteRequest){
+    public String homePage(CreateNoteRequest createNoteRequest) {
         return "home";
     }
 
     @GetMapping("/")
-    public String indexPage(){
+    public String indexPage() {
         return "redirect:/home";
     }
 
     @PostMapping("/note")
     public String createNote(@Valid CreateNoteRequest createNoteRequest, BindingResult result, Model model) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             List<FormValidationError> formValidationErrors = helpers.getErrors(result);
-            model.addAttribute("formErrors",formValidationErrors);
+            model.addAttribute("formErrors", formValidationErrors);
             return "/home";
         }
-        System.out.println(createNoteRequest);
+        noteService.createNote(createNoteRequest);
         return "/home";
     }
 
