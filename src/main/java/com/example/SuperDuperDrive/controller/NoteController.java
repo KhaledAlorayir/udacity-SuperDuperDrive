@@ -32,16 +32,16 @@ public class NoteController {
 
         if (createNoteRequest.getId() == null) {
             noteService.createNote(createNoteRequest);
+            return "redirect:/home?note=created";
         } else {
             noteService.updateNote(createNoteRequest);
+            return "redirect:/home?note=updated";
         }
-
-        return "redirect:/home";
     }
 
     @GetMapping("/notes/{noteId}/delete")
     public String deleteNote(@PathVariable int noteId) {
         noteService.deleteNote(noteId);
-        return "redirect:/home";
+        return "redirect:/home?note=deleted";
     }
 }
