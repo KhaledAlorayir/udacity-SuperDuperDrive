@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateNoteRequest {
+    private Integer id;
+
     @NotBlank
     @Size(max = 20)
     private String title;

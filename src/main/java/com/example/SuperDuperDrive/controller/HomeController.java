@@ -23,29 +23,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final Helpers helpers;
     private final NoteService noteService;
-
-    @GetMapping("/home")
-    public String homePage(CreateNoteRequest createNoteRequest) {
-        System.out.println(noteService.getNotes());
-        return "home";
-    }
 
     @GetMapping("/")
     public String indexPage() {
         return "redirect:/home";
     }
 
-    @PostMapping("/note")
-    public String createNote(@Valid CreateNoteRequest createNoteRequest, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            List<FormValidationError> formValidationErrors = helpers.getErrors(result);
-            model.addAttribute("formErrors", formValidationErrors);
-            return "/home";
-        }
-        noteService.createNote(createNoteRequest);
-        return "/home";
+    @GetMapping("/home")
+    public String homePage(CreateNoteRequest createNoteRequest, Model model) {
+        model.addAttribute("notes", noteService.getNotes());
+        return "home";
     }
+
 
 }

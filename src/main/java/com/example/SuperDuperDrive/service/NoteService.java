@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,5 +24,23 @@ public class NoteService {
 
     public List<GetNoteResponse> getNotes() {
         return noteMapper.findAllByUserId(authService.getAuthentication().getId()).stream().map(note -> new GetNoteResponse(note)).collect(Collectors.toList());
+    }
+
+    public void deleteNote(int noteId) {
+        Note note = noteMapper.findById(noteId).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+
+        if(note.getUser_id() != authService.getAuthentication().getId()) {
+            throw new RuntimeException("not authorized");
+        }
+        noteMapper.deleteById(noteId);
+    }
+
+    public void updateNote(CreateNoteRequest createNoteRequest) {
+        Note note = noteMapper.findById(createNoteRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+
+        if(note.getUser_id() != authService.getAuthentication().getId()) {
+            throw new RuntimeException("not authorized");
+        }
+        noteMapper.updateById(createNoteRequest);
     }
 }

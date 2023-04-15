@@ -2,8 +2,7 @@ package com.example.SuperDuperDrive.dto;
 
 import com.example.SuperDuperDrive.entity.Note;
 import lombok.Data;
-
-
+@Data
 public class GetNoteResponse {
     private int id;
     private String title;
