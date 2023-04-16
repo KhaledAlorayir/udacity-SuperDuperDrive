@@ -28,12 +28,12 @@ public class CredentialController {
             return "redirect:/home";
         }
         credentialService.createCredential(createCredentialRequest);
-        return "redirect:/home";
+        return "redirect:/home?credential=created";
     }
 
     @GetMapping("/credentials/{credentialId}/delete")
     public String deleteCredential(@PathVariable int credentialId) {
         credentialService.deleteCredential(credentialId);
-        return "redirect:/home";
+        return "redirect:/home?credential=deleted";
     }
 }
