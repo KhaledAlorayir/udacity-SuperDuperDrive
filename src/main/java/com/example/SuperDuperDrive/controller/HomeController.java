@@ -1,5 +1,6 @@
 package com.example.SuperDuperDrive.controller;
 
+import com.example.SuperDuperDrive.dto.CreateCredentialRequest;
 import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.dto.FormValidationError;
 import com.example.SuperDuperDrive.service.AuthService;
@@ -31,7 +32,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String homePage(CreateNoteRequest createNoteRequest, Model model) {
+    public String homePage(CreateNoteRequest createNoteRequest, CreateCredentialRequest createCredentialRequest, Model model) {
         model.addAttribute("notes", noteService.getNotes());
         return "home";
     }

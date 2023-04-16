@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -23,11 +24,11 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping("/notes")
-    public String noteFormAction(@Valid CreateNoteRequest createNoteRequest, BindingResult result, Model model) {
+    public String noteFormAction(@Valid CreateNoteRequest createNoteRequest, BindingResult result, Model model, RedirectAttributes redirectAttrs) {
         if (result.hasErrors()) {
             List<FormValidationError> formValidationErrors = helpers.getErrors(result);
-            model.addAttribute("formErrors", formValidationErrors);
-            return "/home";
+            redirectAttrs.addFlashAttribute("formErrors", formValidationErrors);
+            return "redirect:/home";
         }
 
         if (createNoteRequest.getId() == null) {
