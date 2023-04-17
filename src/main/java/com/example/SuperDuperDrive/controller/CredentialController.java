@@ -27,8 +27,15 @@ public class CredentialController {
             redirectAttrs.addFlashAttribute("formErrors", formValidationErrors);
             return "redirect:/home";
         }
-        credentialService.createCredential(createCredentialRequest);
-        return "redirect:/home?credential=created";
+
+        if(createCredentialRequest.getId() == null) {
+            credentialService.createCredential(createCredentialRequest);
+            return "redirect:/home?credential=created";
+        } else {
+            credentialService.updatedCredential(createCredentialRequest);
+            return "redirect:/home?credential=updated";
+        }
+
     }
 
     @GetMapping("/credentials/{credentialId}/delete")

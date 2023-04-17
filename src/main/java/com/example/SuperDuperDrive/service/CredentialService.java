@@ -24,7 +24,7 @@ public class CredentialService {
     }
 
     public List<GetCredentialResponse> getCredentials() {
-        return credentialMapper.findAllByUserId(authService.getAuthentication().getId()).stream().map(credential -> new GetCredentialResponse(credential)).collect(Collectors.toList());
+        return credentialMapper.findAllByUserId(authService.getAuthentication().getId()).stream().map(credential -> new GetCredentialResponse(credential, encryptionService.decryptValue(credential.getPassword(),credential.getSecret()))).collect(Collectors.toList());
     }
 
     public void deleteCredential(int credentialId) {
@@ -34,6 +34,21 @@ public class CredentialService {
             throw new RuntimeException("not authorized");
         }
         credentialMapper.deleteById(credentialId);
+    }
+
+    public void updatedCredential(CreateCredentialRequest createCredentialRequest) {
+        Credential credential = credentialMapper.findById(createCredentialRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+
+        if(credential.getUser_id() != authService.getAuthentication().getId()) {
+            throw new RuntimeException("not authorized");
+        }
+        String key = encryptionService.generateKey();
+        String encryptedPassword = encryptionService.encryptValue(createCredentialRequest.getPassword(),key);
+        credential.setPassword(encryptedPassword);
+        credential.setSecret(key);
+        credential.setUrl(createCredentialRequest.getUrl());
+        credential.setUsername(createCredentialRequest.getUsername());
+        credentialMapper.updateById(credential);
     }
 
 }

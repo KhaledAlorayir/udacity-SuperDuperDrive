@@ -1,10 +1,8 @@
 package com.example.SuperDuperDrive.mapper;
 
+import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.entity.Credential;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -24,5 +22,6 @@ public interface CredentialMapper {
 
     @Delete("DELETE FROM credentials WHERE id = #{credentialId}")
     void deleteById(int credentialId);
-
+    @Update("UPDATE credentials SET url=#{url},username=#{username},password=#{password},secret=#{secret} WHERE id = #{id}")
+    void updateById(Credential credential);
 }

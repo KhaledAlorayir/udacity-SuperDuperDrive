@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.URL;
 
 @Data
 public class CreateCredentialRequest {
+    private Integer id;
     @NotBlank
     @URL
     @Size(max = 100)
