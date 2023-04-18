@@ -5,6 +5,7 @@ import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.dto.FormValidationError;
 import com.example.SuperDuperDrive.service.AuthService;
 import com.example.SuperDuperDrive.service.CredentialService;
+import com.example.SuperDuperDrive.service.FileService;
 import com.example.SuperDuperDrive.service.NoteService;
 import com.example.SuperDuperDrive.util.Helpers;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class HomeController {
 
     private final NoteService noteService;
     private final CredentialService credentialService;
+    private final FileService fileService;
 
     @GetMapping("/")
     public String indexPage() {
@@ -37,6 +39,7 @@ public class HomeController {
     public String homePage(CreateNoteRequest createNoteRequest, CreateCredentialRequest createCredentialRequest, Model model) {
         model.addAttribute("notes", noteService.getNotes());
         model.addAttribute("credentials", credentialService.getCredentials());
+        model.addAttribute("files", fileService.getFiles());
         return "home";
     }
 

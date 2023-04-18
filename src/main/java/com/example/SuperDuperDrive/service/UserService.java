@@ -20,18 +20,15 @@ public class UserService {
     private final HashService hashService;
 
     public Response<Boolean> createUser(CreateUserRequest createUserRequest) {
-        Response response = new Response<>();
         Optional<User> user = userMapper.findByUsername(createUserRequest.getUsername().toUpperCase());
 
         if(user.isPresent()){
-            response.setError("username already exist");
-            return response;
+            return new Response<Boolean>(false,"username already exist");
         }
 
         GenerateHashPassword Password = hashService.generateHashPassword(createUserRequest.getPassword());
         userMapper.create(new User(createUserRequest.getUsername(),Password.getSalt(),Password.getHashedPassword(),createUserRequest.getUsername(),createUserRequest.getLastname()));
-        response.setData(true);
-        return response;
+        return new Response<Boolean>(true);
     }
 
 
