@@ -24,8 +24,8 @@
     </div>
     <div class="alert alert-success" th:if="${param.file}" th:text="'file has been ' + ${param.file}">
     </div>
-    <div class="alert alert-danger" th:if="${response?.error}">
-        <span th:text="${response.error}"></span>
+    <div class="alert alert-danger" th:if="${response?.errorMessage}">
+        <span th:text="${response.errorMessage}"></span>
     </div>
 
     <div id="contentDiv" style="clear: right;">

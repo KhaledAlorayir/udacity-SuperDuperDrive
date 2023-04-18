@@ -3,6 +3,7 @@ package com.example.SuperDuperDrive.service;
 import com.example.SuperDuperDrive.dto.CreateCredentialRequest;
 import com.example.SuperDuperDrive.dto.GetCredentialResponse;
 import com.example.SuperDuperDrive.entity.Credential;
+import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.CredentialMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CredentialService {
         Credential credential = credentialMapper.findById(credentialId).orElseThrow(() -> new RuntimeException("note doesn't exist"));
 
         if(credential.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         credentialMapper.deleteById(credentialId);
     }
@@ -40,7 +41,7 @@ public class CredentialService {
         Credential credential = credentialMapper.findById(createCredentialRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
 
         if(credential.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         String key = encryptionService.generateKey();
         String encryptedPassword = encryptionService.encryptValue(createCredentialRequest.getPassword(),key);

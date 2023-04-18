@@ -1,7 +1,7 @@
 package com.example.SuperDuperDrive.controller;
 
 import com.example.SuperDuperDrive.dto.CreateUserRequest;
-import com.example.SuperDuperDrive.dto.Response;
+import com.example.SuperDuperDrive.dto.ExceptionResponse;
 
 import com.example.SuperDuperDrive.service.UserService;
 import jakarta.validation.Valid;
@@ -28,11 +28,9 @@ public class UserController {
         if (result.hasErrors()) {
             return "signup";
         }
-
-        Response response = userService.createUser(createUserRequest);
-        model.addAttribute("response", response);
+        userService.createUser(createUserRequest);
         createUserRequest.clear();
-        return "signup";
+        return "redirect:/signup?success";
     }
 
 

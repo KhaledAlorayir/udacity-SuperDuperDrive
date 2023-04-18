@@ -1,7 +1,7 @@
 package com.example.SuperDuperDrive.controller;
 
 import com.example.SuperDuperDrive.dto.GetDownloadFileResponse;
-import com.example.SuperDuperDrive.dto.Response;
+import com.example.SuperDuperDrive.dto.ExceptionResponse;
 import com.example.SuperDuperDrive.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,14 +22,7 @@ public class FileController {
 
     @PostMapping("/files")
     public String fileFormAction(@RequestParam("fileUpload") MultipartFile fileUpload, RedirectAttributes redirectAttrs) {
-        Response response = fileService.createFile(fileUpload);
-
-        if (response.getError() != null) {
-            redirectAttrs.addFlashAttribute("response", response);
-            return "redirect:/home";
-        }
-
-        redirectAttrs.addFlashAttribute("response", response);
+        fileService.createFile(fileUpload);
         return "redirect:/home?file=created";
     }
 

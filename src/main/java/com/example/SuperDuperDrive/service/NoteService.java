@@ -3,6 +3,7 @@ package com.example.SuperDuperDrive.service;
 import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.dto.GetNoteResponse;
 import com.example.SuperDuperDrive.entity.Note;
+import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.NoteMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class NoteService {
         Note note = noteMapper.findById(noteId).orElseThrow(() -> new RuntimeException("note doesn't exist"));
 
         if(note.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         noteMapper.deleteById(noteId);
     }
@@ -39,7 +40,7 @@ public class NoteService {
         Note note = noteMapper.findById(createNoteRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
 
         if(note.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         noteMapper.updateById(createNoteRequest);
     }

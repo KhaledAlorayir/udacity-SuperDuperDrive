@@ -2,20 +2,17 @@ package com.example.SuperDuperDrive.service;
 
 import com.example.SuperDuperDrive.dto.GetDownloadFileResponse;
 import com.example.SuperDuperDrive.dto.GetFileResponse;
-import com.example.SuperDuperDrive.dto.Response;
+import com.example.SuperDuperDrive.dto.ExceptionResponse;
 import com.example.SuperDuperDrive.entity.File;
+import com.example.SuperDuperDrive.exception.EmptyFileException;
+import com.example.SuperDuperDrive.exception.FilenameExistsException;
+import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.FileMapper;
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,11 +24,16 @@ public class FileService {
     private final AuthService authService;
     private final FileMapper fileMapper;
 
-    public Response createFile(MultipartFile multipartFile) {
+    public void createFile(MultipartFile multipartFile) {
+
+        if (multipartFile.isEmpty()) {
+            throw new EmptyFileException();
+        }
+
         Optional<File> optionalFile = fileMapper.findByFilenameAndUserId(multipartFile.getOriginalFilename(), authService.getAuthentication().getId());
 
         if (optionalFile.isPresent()) {
-            return new Response<Boolean>(false, "you have uploaded a file with the same name before!");
+            throw new FilenameExistsException();
         }
 
         try {
@@ -39,8 +41,6 @@ public class FileService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return new Response<Boolean>(true);
     }
 
     public List<GetFileResponse> getFiles() {
@@ -51,7 +51,7 @@ public class FileService {
         File file = fileMapper.findById(fileId).orElseThrow(() -> new RuntimeException("file doesn't exist"));
 
         if (file.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         return new GetDownloadFileResponse(file);
     }
@@ -60,7 +60,7 @@ public class FileService {
         File file = fileMapper.findById(fileId).orElseThrow(() -> new RuntimeException("file doesn't exist"));
 
         if (file.getUser_id() != authService.getAuthentication().getId()) {
-            throw new RuntimeException("not authorized");
+            throw new UnauthorizedException();
         }
         fileMapper.deleteById(fileId);
     }
