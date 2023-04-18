@@ -1,6 +1,7 @@
 package com.example.SuperDuperDrive.controller;
 
 import com.example.SuperDuperDrive.dto.GetDownloadFileResponse;
+import com.example.SuperDuperDrive.dto.Response;
 import com.example.SuperDuperDrive.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,8 +21,15 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/files")
-    public String fileFormAction(@RequestParam("fileUpload") MultipartFile fileUpload) {
-        fileService.createFile(fileUpload);
+    public String fileFormAction(@RequestParam("fileUpload") MultipartFile fileUpload, RedirectAttributes redirectAttrs) {
+        Response response = fileService.createFile(fileUpload);
+
+        if (response.getError() != null) {
+            redirectAttrs.addFlashAttribute("response", response);
+            return "redirect:/home";
+        }
+
+        redirectAttrs.addFlashAttribute("response", response);
         return "redirect:/home?file=created";
     }
 
@@ -33,7 +42,6 @@ public class FileController {
     @GetMapping("/files/{fileId}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable int fileId) {
         GetDownloadFileResponse fileResponse = fileService.getFileData(fileId);
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileResponse.getName() + "\"")
                 .body(fileService.getFileData(fileId).getFile_data());
