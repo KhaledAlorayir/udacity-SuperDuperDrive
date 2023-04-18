@@ -6,6 +6,7 @@ import com.example.SuperDuperDrive.dto.ExceptionResponse;
 import com.example.SuperDuperDrive.entity.File;
 import com.example.SuperDuperDrive.exception.EmptyFileException;
 import com.example.SuperDuperDrive.exception.FilenameExistsException;
+import com.example.SuperDuperDrive.exception.ResourceNotFoundException;
 import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.FileMapper;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class FileService {
     }
 
     public GetDownloadFileResponse getFileData(int fileId) {
-        File file = fileMapper.findById(fileId).orElseThrow(() -> new RuntimeException("file doesn't exist"));
+        File file = fileMapper.findById(fileId).orElseThrow(() -> new ResourceNotFoundException());
 
         if (file.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();
@@ -57,7 +58,7 @@ public class FileService {
     }
 
     public void deleteFile(int fileId) {
-        File file = fileMapper.findById(fileId).orElseThrow(() -> new RuntimeException("file doesn't exist"));
+        File file = fileMapper.findById(fileId).orElseThrow(() -> new ResourceNotFoundException());
 
         if (file.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();

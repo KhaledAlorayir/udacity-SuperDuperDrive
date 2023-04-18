@@ -19,12 +19,12 @@ public class ControllerAdviceHandler {
         return errorHandler.Handler("the file exceeds the allowed file size of 1mb", redirectAttrs);
     }
 
-    @ExceptionHandler({FilenameExistsException.class,EmptyFileException.class})
+    @ExceptionHandler({FilenameExistsException.class, EmptyFileException.class, ResourceNotFoundException.class})
     public String handleUserExceptions(RuntimeException exception, RedirectAttributes redirectAttrs) {
         return errorHandler.Handler(exception.getMessage(), redirectAttrs);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler({UnauthorizedException.class})
     public String handleUnauthorizedException(RuntimeException exception, RedirectAttributes redirectAttrs) {
         return errorHandler.Handler(exception.getMessage(), redirectAttrs, "login");
     }

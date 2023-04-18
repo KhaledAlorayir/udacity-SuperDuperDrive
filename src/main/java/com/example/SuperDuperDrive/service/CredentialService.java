@@ -3,6 +3,7 @@ package com.example.SuperDuperDrive.service;
 import com.example.SuperDuperDrive.dto.CreateCredentialRequest;
 import com.example.SuperDuperDrive.dto.GetCredentialResponse;
 import com.example.SuperDuperDrive.entity.Credential;
+import com.example.SuperDuperDrive.exception.ResourceNotFoundException;
 import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.CredentialMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CredentialService {
     }
 
     public void deleteCredential(int credentialId) {
-        Credential credential = credentialMapper.findById(credentialId).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+        Credential credential = credentialMapper.findById(credentialId).orElseThrow(() -> new ResourceNotFoundException());
 
         if(credential.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();
@@ -38,7 +39,7 @@ public class CredentialService {
     }
 
     public void updatedCredential(CreateCredentialRequest createCredentialRequest) {
-        Credential credential = credentialMapper.findById(createCredentialRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+        Credential credential = credentialMapper.findById(createCredentialRequest.getId()).orElseThrow(() -> new ResourceNotFoundException());
 
         if(credential.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();

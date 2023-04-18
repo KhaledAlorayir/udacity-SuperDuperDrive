@@ -3,6 +3,7 @@ package com.example.SuperDuperDrive.service;
 import com.example.SuperDuperDrive.dto.CreateNoteRequest;
 import com.example.SuperDuperDrive.dto.GetNoteResponse;
 import com.example.SuperDuperDrive.entity.Note;
+import com.example.SuperDuperDrive.exception.ResourceNotFoundException;
 import com.example.SuperDuperDrive.exception.UnauthorizedException;
 import com.example.SuperDuperDrive.mapper.NoteMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class NoteService {
     }
 
     public void deleteNote(int noteId) {
-        Note note = noteMapper.findById(noteId).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+        Note note = noteMapper.findById(noteId).orElseThrow(() -> new ResourceNotFoundException());
 
         if(note.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();
@@ -37,7 +38,7 @@ public class NoteService {
     }
 
     public void updateNote(CreateNoteRequest createNoteRequest) {
-        Note note = noteMapper.findById(createNoteRequest.getId()).orElseThrow(() -> new RuntimeException("note doesn't exist"));
+        Note note = noteMapper.findById(createNoteRequest.getId()).orElseThrow(() -> new ResourceNotFoundException());
 
         if(note.getUser_id() != authService.getAuthentication().getId()) {
             throw new UnauthorizedException();
