@@ -30,7 +30,7 @@ public class UserController {
         }
         userService.createUser(createUserRequest);
         createUserRequest.clear();
-        return "redirect:/signup?success";
+        return "redirect:/login?success";
     }
 
 

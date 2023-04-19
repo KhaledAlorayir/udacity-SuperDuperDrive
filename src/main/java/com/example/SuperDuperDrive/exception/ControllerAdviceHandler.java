@@ -1,6 +1,5 @@
 package com.example.SuperDuperDrive.exception;
 
-import com.example.SuperDuperDrive.dto.ExceptionResponse;
 import com.example.SuperDuperDrive.util.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
